@@ -21,3 +21,4 @@ const blogschema = new Schema({
 })
 
 const Blog= mongoose.Model('Blog',blogschema)
+module.exports = Blog
