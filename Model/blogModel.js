@@ -12,7 +12,7 @@ const blogschema = new Schema({
     },
 
     description:{
-        type:Text
+        type:String
     },
 
     image:{
@@ -20,5 +20,5 @@ const blogschema = new Schema({
     }
 })
 
-const Blog= mongoose.Model('Blog',blogschema)
+const Blog= mongoose.model("Blog",blogschema)
 module.exports = Blog
