@@ -15,8 +15,15 @@ app.get("/", (req, res) => {
     })
 })
 
-app.post("/blog", async(req, res) => {
+app.post("/blog", async (req, res) => {
     const { title, subtitle, description, image } = req.body
+
+    //check condition if data not send error msg 400 show 
+    if (!title || !description || !subtitle || !image) {
+        return res.status(400).json({
+            message: "Please provide title,description,subtitle,image"
+        })
+    }
     await Blog.create({
         title: title,
         description: description,
