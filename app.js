@@ -18,28 +18,38 @@ app.get("/", (req, res) => {
     })
 })
 
-app.post("/blog", upload.single('image'), (req, res) => {
-    
-    // const { title, subtitle, description, image } = req.body
+app.post("/blog", upload.single('image'), async (req, res) => { 
+    const { title, subtitle, description} = req.body
+    const filename = req.file.filename
 
-    // //check condition if data not send error msg 400 show 
-    // if (!title || !description || !subtitle || !image) {
-    //     return res.status(400).json({
-    //         message: "Please provide title,description,subtitle,image"
-    //     })
-    // }
-    // await Blog.create({
-    //     title: title,
-    //     description: description,
-    //     subtitle: subtitle,
-    //     image: image
-    // })
-    console.log(req.body)
-    console.log(req.file)
+    //check condition if data not send error msg 400 show 
+    if (!title || !description || !subtitle) {
+        return res.status(400).json({
+            message: "Please provide title,description,subtitle,image"
+        })
+    }
+    await Blog.create({
+        title: title,
+        subtitle: subtitle,
+        description: description,
+        image: filename
+    })
+    // console.log(req.body)
+    // console.log(req.file)
     res.status(200).json({
         message: "Blog api hit sucessfully!.."
     })
 })
+
+app.get("/blog", async (req,res)=>{
+    const blogs = await Blog.find()
+    res.status(200).json ({
+        message:"Blogs fetched Sucessfully",
+        data: blogs
+    })
+})
+
+app.use(express.static('./storage'))
 
 
 

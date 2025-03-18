@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const blogschema = new Schema({
     title:{
         type:String,
-        unique :true
+      
     },
     subtitle:{
         type:String
