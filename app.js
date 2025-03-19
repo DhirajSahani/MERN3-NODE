@@ -9,6 +9,7 @@ app.use(express.json())
 const { multer, storage } = require('./middleware/multerConfig')
 
 const upload = multer({ storage: storage })
+const fs = require('fs')
 
 connectToDatabase()
 
@@ -49,7 +50,7 @@ app.get("/blog", async (req, res) => {
     })
 })
 
-app.get("/blog/:id", async (req,res) => {
+app.get("/blog/:id", async (req, res) => {
     const id = req.params.id
     const blog = await Blog.findById(id) // return obj
 
@@ -65,16 +66,55 @@ app.get("/blog/:id", async (req,res) => {
     })
 })
 
-app.delete("/blog/:id",async(req,res)=>{
+app.delete("/blog/:id", async (req, res) => {
     const id = req.params.id
-   await Blog.findByIdAndDelete(id) // delete data
+    await Blog.findByIdAndDelete(id) // delete data
+    fs.unlink('storage/${imageName}', (err) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log("file deleted successfully.")
+        }
+    })
     res.status(200).json({
-        message:"delete data Successfully.."
+        message: "delete data Successfully.."
     })
 })
 
-    app.use(express.static('./storage'))
+app.patch("/blog/:id", upload.single('image'), async (req, res) => {
+    const id = req.params.id
+    const {title,subtitle,description} = req.body
+    let imageName;
+    if (req.file) {
+        imageName = req.file.filename
+        const blog = await Blog.findById(id)
+        const uploadImage = blog.image
 
-    app.listen(process.env.PORT, () => {
-        console.log("NodeJs projct has started")
+        fs.unlink(`storage/${uploadImage}`,(err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log("updated  successfully.")
+            }
+        })
+
+    }
+
+    await Blog.findByIdAndUpdate(id, {
+        tilte: title,
+        subtitle: subtitle,
+        description: description,
+        image: imageName
+
     })
+    res.status(200).json({
+        message: "Blog Updated  Successfully.."
+    })
+
+})
+
+app.use(express.static('./storage'))
+
+app.listen(process.env.PORT, () => {
+    console.log("NodeJs projct has started")
+})
