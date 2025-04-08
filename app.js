@@ -28,7 +28,15 @@ app.get("/", (req, res) => {
 
 app.post("/blog", upload.single('image'), async (req, res) => {
     const { title, subtitle, description } = req.body
-    const filename = req.file.filename
+    console.log(req.body)
+    let filename ;
+    console.log(req.file)
+    if(req.file){
+        filename ="http://localhost:3000/" + req.file.filename
+    }
+    else{
+        filename= "haha.jpeg"
+    }
 
     //check condition if data not send error msg 400 show 
     if (!title || !description || !subtitle) {
@@ -45,7 +53,11 @@ app.post("/blog", upload.single('image'), async (req, res) => {
     // console.log(req.body)
     // console.log(req.file)
     res.status(200).json({
-        message: "Blog api hit sucessfully!.."
+        message: "Blog api hit sucessfully!..",
+        title: title,
+        subtitle: subtitle,
+        description: description,
+        image: filename
     })
 })
 
