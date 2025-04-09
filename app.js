@@ -105,7 +105,7 @@ app.patch("/blog/:id", upload.single('image'), async (req, res) => {
     const {title,subtitle,description} = req.body
     let imageName;
     if (req.file) {
-        imageName = req.file.filename
+        imageName = "http://localhost:3000/" + req.file.filename
         const blog = await Blog.findById(id)
         const uploadImage = blog.image
 
@@ -120,7 +120,7 @@ app.patch("/blog/:id", upload.single('image'), async (req, res) => {
     }
 
     await Blog.findByIdAndUpdate(id, {
-        tilte: title,
+        title: title,
         subtitle: subtitle,
         description: description,
         image: imageName
